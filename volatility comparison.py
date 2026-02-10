@@ -71,6 +71,7 @@ weeklyLogReturns = pd.DataFrame({
 #tampilin 5 data
 print(weeklyLogReturns.show(5))
 
+# grafik komparasi log return issi dan jii
 plt.figure(figsize=(11,5))
 plt.plot(weeklyLogReturns.index, weeklyLogReturns['ISSI'],label='ISSI', linewidth=1.5)
 plt.plot(weeklyLogReturns.index, weeklyLogReturns['JII'],label='JII', linewidth=1.5, linestyle='--')
