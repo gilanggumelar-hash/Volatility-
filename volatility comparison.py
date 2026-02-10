@@ -62,18 +62,14 @@ jiiWeekly  = jiiData['Close'].resample('W').last()
 #Rumus Log Return Mingguan =LN(Current_Price / Previous_Price). 
 issiLogReturn = np.log(issiWeekly / issiWeekly.shift(1)).dropna()
 jiiLogReturn  = np.log(jiiWeekly / jiiWeekly.shift(1)).dropna()
-
 weeklyLogReturns = pd.DataFrame({
     'ISSI': issiLogReturn,
     'JII': jiiLogReturn
 })
 
-#tampilin 5 data
+#tampilin dataframenya
 print(weeklyLogReturns.head())
 
-
-
-# grafik komparasi log return issi dan jii
 plt.figure(figsize=(11,5))
 plt.plot(weeklyLogReturns.index, weeklyLogReturns['ISSI'],label='ISSI', linewidth=1.5)
 plt.plot(weeklyLogReturns.index, weeklyLogReturns['JII'],label='JII', linewidth=1.5, linestyle='--')
@@ -86,3 +82,27 @@ plt.tight_layout()
 plt.show()
 
 
+#rolling window 4 minggu
+window = 4 
+
+#rumus volatilitas = standar deviasi dari hasil log return dikali akar 4 karena windownya 4 week sesuai aturan square root of time rule in finance
+issiVolatility = weeklyLogReturns['ISSI'].rolling(window=window).std() * np.sqrt(window)
+jiiVolatility  = weeklyLogReturns['JII'].rolling(window=window).std() * np.sqrt(window)
+weeklyVolatility = pd.DataFrame({
+    'ISSI Volatility': issiVolatility,
+    'JII Volatility': jiiVolatility
+})
+
+#tampilin dataframenya #3 baris pertama nan karena ga ada yang bisa dihitung dia dihitung 4 minggu 
+print(weeklyVolatility.head())
+
+plt.figure(figsize=(11,5))
+plt.plot(weeklyVolatility.index, weeklyVolatility['ISSI Volatility'],label='ISSI', linewidth=1.5)
+plt.plot(weeklyVolatility.index, weeklyVolatility['JII Volatility'],label='JII', linewidth=1.5, linestyle='--')
+plt.title("Log Return Mingguan Indeks ISSI dan JII")
+plt.xlabel("Tanggal")
+plt.ylabel("Log Return")
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
